@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #FFD9BD;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+    } 
+   
+    .draggable-item {
+      width: 160px; 
+      height: 160px; 
+      margin: 10px;
+      cursor: move;
+      display: inline-block; 
+      border: 3px solid orange;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out; 
+      overflow: hidden;
+      
+    }
+
+    .draggable-item:hover {
+  transform: scale(1.09); 
+    }
+    .draggable-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; 
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .draggable-item:hover img {
+  transform: scale(1.1); 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+}
+    .drop-location {
+      position: relative;
+      width: 250px;
+      height: 250px; 
+      border: 4px dashed #2ecc71;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px;
+      margin-top: 130px;
+      background-color: #FAC898
+    }
+
+    .fruit-name {
+      position: absolute;
+      justify-content: center;
+      align-items: center;
+      bottom: 5px;
+      font-size: 30px;
+      color: #fff;
+      text-transform: uppercase;
+      font-weight: bolder;
+      background-color: #B38460;
+      border-radius: 8px;
+      padding: 5px;
+      text-align: center;
+      margin-bottom: 50%;
+     
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 20vh;
+      padding-top: 120px;
+
+    }
+
+    header {
+  background-color: #B38460;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px; 
+  border-bottom: 4px solid #fff; 
+  border-top: 4px solid #fff; 
+  position: fixed;
+  width: 100%;
+  top: 0; 
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+h1 {
+  margin: 0;
+  font-size: 45px;
+  font-weight: bolder; 
+  text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.2); 
+}
+
+.score-section {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background-color: #B38460;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+    header {
+      padding: 15px;
+      font-size: 18px;
+    }
+
+    h1 {
+      font-size: 30px;
+    }
+
+    .container {
+      flex-direction: column;
+      padding-top: 50px;
+    }
+
+    .draggable-item {
+      margin: 5px;
+    }
+
+    .drop-location {
+      margin: 5px;
+      margin-top: 80px;
+    }
+
+    .score-section {
+      font-size: 14px;
+    }
+  }
+  </style>
+</head>
+<body>
+
+  <header><h1>Juicy Jumble Adventure</h1></header>
+<div class="container">
+  <div class="draggable-item" draggable="true" ondragstart="drag(event)">
+    <img src="Pre-school game/apple.jpg" alt="Apple">
+  </div>
+  <div class="draggable-item" draggable="true" ondragstart="drag(event)">
+    <img src="Pre-school game/banana.jpg" alt="Banana">
+  </div>
+  <div class="draggable-item" draggable="true" ondragstart="drag(event)">
+    <img src="Pre-school game/orange.jpg" alt="Orange">
+  </div>
+  <div class="draggable-item" draggable="true" ondragstart="drag(event)">
+    <img src="Pre-school game/grapes.jpg" alt="Grapes">
+  </div>
+  <div class="draggable-item" draggable="true" ondragstart="drag(event)">
+    <img src="Pre-school game/strawberry.jpg" alt="Strawberry">
+  </div>
+</div>
+
+<div class="container">
+  <div class="drop-location" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <span class="fruit-name">Apple</span>
+  </div>
+  <div class="drop-location" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <span class="fruit-name">Grapes</span>
+  </div>
+  <div class="drop-location" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <span class="fruit-name">Orange</span>
+  </div>
+  <div class="drop-location" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <span class="fruit-name">Strawberry</span>
+  </div>
+  <div class="drop-location" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <span class="fruit-name">Banana</span>
+  </div>
+</div>
+
+<div class="score-section">
+  <strong>Score: <span id="score">0</span></strong>
+</div>
+<script>
+
+  // Initialize the score
+  let score = 0;
+
+  function allowDrop(event) {
+    event.preventDefault();
+  }
+
+  function drag(event) {
+    const draggedElement = event.target;
+    const imageUrl = draggedElement.querySelector('img').src;
+    event.dataTransfer.setData('text/plain', imageUrl);
+  }
+
+  function drop(event) {
+    event.preventDefault();
+    const dropTarget = event.target;
+    const imageUrl = event.dataTransfer.getData('text/plain');
+
+    // Extract the fruit name from the image URL
+    const fruitName = getImageName(imageUrl);
+
+    // Check if the dropped item matches the correct drop zone
+    if (isCorrectDropZone(dropTarget, fruitName)) {
+      const droppedImage = new Image();
+      droppedImage.src = imageUrl;
+
+      // Append the new image element to the drop location
+      dropTarget.innerHTML = ''; // Clear the content
+      dropTarget.appendChild(droppedImage);
+
+      droppedImage.style.width = '100%';
+      droppedImage.style.height = '100%';
+
+      // Remove the original draggable element from its current position
+      const draggedElement = document.querySelector('.draggable-item');
+      draggedElement.parentNode.removeChild(draggedElement);
+
+      // Update the score
+      score += 1;
+      document.getElementById('score').textContent = score;
+    } else {
+      alert('Wrong drop zone for ' + capitalizeFirstLetter(fruitName) + '!');
+    }
+  }
+
+  // Helper function to extract the fruit name from the image URL
+  function getImageName(imageUrl) {
+    const splitUrl = imageUrl.split('/');
+    const imageName = splitUrl[splitUrl.length - 1].split('.')[0];
+    return imageName.toLowerCase();
+  }
+
+  // Helper function to check if it's the correct drop zone for the given fruit
+  function isCorrectDropZone(dropTarget, fruitName) {
+    const targetFruitName = dropTarget.querySelector('.fruit-name').textContent.toLowerCase();
+    return fruitName === targetFruitName;
+  }
+
+  // Helper function to capitalize the first letter of a string
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+</script>
+
+</body>
+</html>
